@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Small Surprise ❤️</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: "Poppins", system-ui, sans-serif;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #1d2671, #c33764);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-align: center;
+    }
+
+    .container {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        padding: 30px 25px;
+        border-radius: 20px;
+        max-width: 420px;
+        width: 90%;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        animation: fadeIn 1s ease;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+
+    .gift {
+        margin: 30px auto;
+        width: 160px;
+        height: 160px;
+        background: linear-gradient(135deg, #ff4e50, #f9d423);
+        border-radius: 16px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .gift:hover {
+        transform: scale(1.05);
+    }
+
+    .gift::before,
+    .gift::after {
+        content: "";
+        position: absolute;
+        background: rgba(255,255,255,0.7);
+    }
+
+    .gift::before {
+        width: 20px;
+        height: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .gift::after {
+        height: 20px;
+        width: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .message {
+        margin-top: 20px;
+        font-size: 1.05rem;
+        min-height: 48px;
+    }
+
+    .counter {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .reveal {
+        display: none;
+        animation: fadeIn 1s ease;
+    }
+
+    iframe {
+        width: 100%;
+        height: 450px;
+        border-radius: 12px;
+        border: none;
+        margin-top: 20px;
+    }
+
+    .final-text {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Confetti */
+    .confetti {
+        position: fixed;
+        top: -10px;
+        width: 10px;
+        height: 10px;
+        background: red;
+        animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(110vh) rotate(360deg);
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container" id="wrapper">
+    <h1>🎁 A Small Surprise</h1>
+    <p>Click the gift to unwrap it… slowly ❤️</p>
+
+    <div class="gift" onclick="unwrapGift()"></div>
+
+    <div class="message" id="message">
+        Every click removes one layer…
+    </div>
+
+    <div class="counter" id="counter">
+        Wrappers left: 10
+    </div>
+</div>
+
+<div class="container reveal" id="finalReveal">
+    <h1>🎉 It’s Finally Open!</h1>
+
+    <div class="final-text">
+        Dear Maa & Didi ❤️  
+        <br><br>
+        Every click here represents patience, prayers, and support.
+        This moment is as much yours as it is mine.
+        <br><br>
+        This is not just an offer letter —  
+        it’s a dream turning real.
+    </div>
+
+    <iframe src="Offer Letter.pdf"></iframe>
+</div>
+
+<script>
+    let clicks = 0;
+    const totalLayers = 10;
+
+    const messages = [
+        "Good things take time…",
+        "Still wrapped with hope ✨",
+        "Almost there…",
+        "Hard work has layers too.",
+        "Faith matters.",
+        "You never stopped believing.",
+        "Dreams don’t open in one click.",
+        "Just a little more…",
+        "This one is special ❤️"
+    ];
+
+    function unwrapGift() {
+        clicks++;
+
+        if (clicks < totalLayers) {
+            document.getElementById("message").innerText =
+                messages[Math.min(clicks - 1, messages.length - 1)];
+
+            document.getElementById("counter").innerText =
+                "Wrappers left: " + (totalLayers - clicks);
+
+            document.querySelector(".gift").style.transform =
+                "scale(" + (1 - clicks * 0.03) + ")";
+        } else {
+            revealFinal();
+        }
+    }
+
+    function revealFinal() {
+    document.getElementById("wrapper").style.display = "none";
+    document.getElementById("passwordScreen").style.display = "block";
+}
+
+
+    function startConfetti() {
+        for (let i = 0; i < 40; i++) {
+            const confetti = document.createElement("div");
+            confetti.classList.add("confetti");
+            confetti.style.left = Math.random() * 100 + "vw";
+            confetti.style.background =
+                `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.animationDuration =
+                (Math.random() * 2 + 2) + "s";
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+    const SECRET_PASSWORD = "family";
+
+function checkPassword() {
+    const input = document.getElementById("passwordInput").value.toLowerCase();
+
+    if (input === SECRET_PASSWORD) {
+        document.getElementById("passwordScreen").style.display = "none";
+        document.getElementById("finalReveal").style.display = "block";
+        startConfetti();
+    } else {
+        const error = document.getElementById("errorText");
+        error.style.display = "block";
+        error.innerText = "Almost… try again ❤️";
+    }
+}
+
+</script>
+<div class="container reveal" id="passwordScreen">
+    <h1>🔐 One Last Step</h1>
+    <p>
+        This gift opens with love.<br>
+        Enter the password ❤️
+    </p>
+
+    <input
+        type="password"
+        id="passwordInput"
+        placeholder="Hint: What we are…"
+        style="
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            margin-top: 20px;
+            outline: none;
+        "
+    >
+
+    <button
+        onclick="checkPassword()"
+        style="
+            margin-top: 20px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg,#ff512f,#dd2476);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        "
+    >
+        Open With Love ❤️
+    </button>
+
+    <p id="errorText" style="margin-top:15px;color:#ffd1d1;display:none;">
+        That’s not it… try again 💭
+    </p>
+</div>
+
+</body>
+</html>
